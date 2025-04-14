@@ -1,0 +1,36 @@
+{
+  "name": "@stexcore/live-server",
+  "version": "1.0.0-pre-alpha.1",
+  "description": "Live Server A simple tool to quickly initialize a live server from an HTML file path, enabling real-time updates for efficient development workflows.",
+  "scripts": {
+    "test": "ts-node ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stexcore/live-server.git"
+  },
+  "keywords": [
+    "live",
+    "server",
+    "realtime",
+    "html",
+    "static"
+  ],
+  "author": "stexcore",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stexcore/live-server/issues"
+  },
+  "homepage": "https://github.com/stexcore/live-server#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/mime-types": "^2.1.4",
+    "express": "^5.1.0",
+    "mime-types": "^3.0.1"
+  }
+}
