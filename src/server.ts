@@ -15,14 +15,22 @@ export class Server {
     protected server: http.Server;
 
     /**
+     * Workdir
+     */
+    protected workdirs: string[];
+
+    /**
      * Server constructor
      */
-    constructor(protected workdir: string) {
+    constructor(workdir: string | string[]) {
         this.app = express();
         this.server = http.createServer(this.app);
 
+        // Set workdirs
+        this.workdirs = workdir instanceof Array ? workdir : [workdir];
+
         // Create controller instance
-        const fileController = new FileController(this, workdir);
+        const fileController = new FileController(this, this.workdirs);
         
         // append controller
         this.app.use(fileController.handleRequest);
