@@ -23,8 +23,7 @@ const { flags, defaults } = argsUtil.parseArgs(process.argv.slice(2)); // Remove
 
 // Handle --help or -h
 if (flags.help || flags.h) {
-    console.log(colors.cyan(`
-Usage: live-server [paths...] [options]
+    console.log(colors.cyan(`Usage: live-server [paths...] [options]
 
 Options:
   paths            One or more directories or files to serve (default: current working directory)
