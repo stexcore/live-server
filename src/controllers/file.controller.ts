@@ -44,6 +44,11 @@ export default class FileController {
                     }
     
                     fileFound = true;
+
+                    // Set the cookie with the dynamic token (you can replace "dynamicTokenValue" with your real token)
+                    res.cookie("STEXCORE_LIVE_SERVER_TOKEN", this.server.serverDynamicToken, {
+                        path: "/", // Make it available for all paths
+                    });
     
                     // Get the MIME type using mime-types
                     const mimeType = lookup(requestedPath) || "application/octet-stream";
@@ -59,10 +64,10 @@ export default class FileController {
                             if (data.includes("</body>")) {
                                 modifiedHtml = data.replace(
                                     "</body>",
-                                    `<script src="/custom-script.js"></script></body>`
+                                    `<script src="/@stexcore/__stexcore-live-update.js"></script></body>`
                                 );
                             } else {
-                                modifiedHtml = `${data}<script src="/custom-script.js"></script></body>`;
+                                modifiedHtml = `${data}<script src="/@stexcore/__stexcore-live-update.js"></script></body>`;
                             }
     
                             res.setHeader("Content-Type", "text/html");
@@ -83,6 +88,12 @@ export default class FileController {
     
                 if (fs.existsSync(fallbackPath)) {
                     fileFound = true;
+
+                    // Set the cookie with the dynamic token for fallback handling as well
+                    res.cookie("STEXCORE_LIVE_SERVER_TOKEN", this.server.serverDynamicToken, {
+                        httpOnly: true, // Prevent client-side access to the token
+                        path: "/", // Make it available for all paths
+                    });
     
                     // Serve index.html as the fallback
                     fs.readFile(fallbackPath, "utf8", (err, data) => {
@@ -94,10 +105,10 @@ export default class FileController {
                         if (data.includes("</body>")) {
                             modifiedHtml = data.replace(
                                 "</body>",
-                                `<script src="/custom-script.js"></script></body>`
+                                `<script src="/@stexcore/__stexcore-live-update.js"></script></body>`
                             );
                         } else {
-                            modifiedHtml = `${data}<script src="/custom-script.js"></script></body>`;
+                            modifiedHtml = `${data}<script src="/@stexcore/__stexcore-live-update.js"></script></body>`;
                         }
     
                         res.setHeader("Content-Type", "text/html");
