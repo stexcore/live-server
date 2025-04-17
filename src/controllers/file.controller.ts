@@ -29,12 +29,14 @@ export default class FileController {
             for (const workdir of this.workdirs) {
                 let requestedPath = path.join(
                     workdir,
-                    req.path === "/" ? "/index.html" : req.path
+                    req.path === "/" && !this.server.strictMode ? "/index.html" : req.path
                 );
     
                 if (fs.existsSync(requestedPath)) {
-                    // Check if the requested path is a directory
+                    // Check if strictMode is disabled before attempting to append index.html
                     if (fs.lstatSync(requestedPath).isDirectory()) {
+                        // Strict mode? ignore this operation
+                        if(this.server.strictMode) continue;
                         // Try loading index.html inside the directory
                         requestedPath = path.join(requestedPath, "index.html");
     
@@ -44,8 +46,8 @@ export default class FileController {
                     }
     
                     fileFound = true;
-
-                    // Set the cookie with the dynamic token (you can replace "dynamicTokenValue" with your real token)
+    
+                    // Set the cookie with the dynamic token
                     res.cookie("STEXCORE_LIVE_SERVER_TOKEN", this.server.serverDynamicToken, {
                         path: "/", // Make it available for all paths
                     });
@@ -83,38 +85,40 @@ export default class FileController {
             }
     
             // As a fallback, try serving index.html from the base directory
-            for (const workdir of this.workdirs) {
-                const fallbackPath = path.join(workdir, "index.html");
+            if (!this.server.strictMode) {
+                for (const workdir of this.workdirs) {
+                    const fallbackPath = path.join(workdir, "index.html");
     
-                if (fs.existsSync(fallbackPath)) {
-                    fileFound = true;
-
-                    // Set the cookie with the dynamic token for fallback handling as well
-                    res.cookie("STEXCORE_LIVE_SERVER_TOKEN", this.server.serverDynamicToken, {
-                        httpOnly: true, // Prevent client-side access to the token
-                        path: "/", // Make it available for all paths
-                    });
+                    if (fs.existsSync(fallbackPath)) {
+                        fileFound = true;
     
-                    // Serve index.html as the fallback
-                    fs.readFile(fallbackPath, "utf8", (err, data) => {
-                        if (err) {
-                            return next(err); // Handle file reading errors
-                        }
+                        // Set the cookie with the dynamic token for fallback handling as well
+                        res.cookie("STEXCORE_LIVE_SERVER_TOKEN", this.server.serverDynamicToken, {
+                            httpOnly: true, // Prevent client-side access to the token
+                            path: "/", // Make it available for all paths
+                        });
     
-                        let modifiedHtml: string;
-                        if (data.includes("</body>")) {
-                            modifiedHtml = data.replace(
-                                "</body>",
-                                `<script src="/@stexcore/__stexcore-live-update.js"></script></body>`
-                            );
-                        } else {
-                            modifiedHtml = `${data}<script src="/@stexcore/__stexcore-live-update.js"></script></body>`;
-                        }
+                        // Serve index.html as the fallback
+                        fs.readFile(fallbackPath, "utf8", (err, data) => {
+                            if (err) {
+                                return next(err); // Handle file reading errors
+                            }
     
-                        res.setHeader("Content-Type", "text/html");
-                        res.send(modifiedHtml);
-                    });
-                    return;
+                            let modifiedHtml: string;
+                            if (data.includes("</body>")) {
+                                modifiedHtml = data.replace(
+                                    "</body>",
+                                    `<script src="/@stexcore/__stexcore-live-update.js"></script></body>`
+                                );
+                            } else {
+                                modifiedHtml = `${data}<script src="/@stexcore/__stexcore-live-update.js"></script></body>`;
+                            }
+    
+                            res.setHeader("Content-Type", "text/html");
+                            res.send(modifiedHtml);
+                        });
+                        return;
+                    }
                 }
             }
     
@@ -126,6 +130,8 @@ export default class FileController {
             next(err); // Forward errors to the next middleware
         }
     };
+    
+    
     
     
 }

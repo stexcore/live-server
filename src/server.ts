@@ -4,6 +4,7 @@ import FileController from "./controllers/file.controller";
 import WebSocketController from "./controllers/websocket.controller";
 import path from "path";
 import morgan from "morgan";
+import p404Controller from "./controllers/404.controller";
 
 export class Server {
 
@@ -33,23 +34,32 @@ export class Server {
     public readonly serverDynamicToken: number;
 
     /**
+     * Strict mode
+     */
+    public readonly strictMode: boolean;
+
+    /**
      * Server constructor
      */
-    constructor(workdir: string | string[]) {
+    constructor(workdir: string | string[], strictMode: boolean) {
         this.app = express();
         this.server = http.createServer(this.app);
         this.serverDynamicToken = Date.now();
+        this.strictMode = strictMode;
 
         // Set workdirs
         this.workdirs = workdir instanceof Array ? workdir : [workdir];
 
         // Create file controller instance
         const fileController = new FileController(this, this.workdirs);
+        // Create 404 controller instance
+        const p404controller = new p404Controller();
 
         // Append file controller middleware
         this.app.use(express.static(path.join(__dirname, "../public")));
         this.app.use(morgan("dev"));
         this.app.use(fileController.handleRequest);
+        this.app.use(p404controller.handleRequest);
 
         // Create WebSocketController instance
         this.websocketController = new WebSocketController(this.server, this.serverDynamicToken);

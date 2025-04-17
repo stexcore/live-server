@@ -25,22 +25,17 @@ npm install -g @stexcore/live-server
 Start a development server from the command line:
 
 ```bash
-live-server <path-to-files>
+live-server \[paths...\] \[options\]
 ```
 
 ### Examples
 
-1. **Serve a specific HTML file**:
-   ```bash
-   live-server ./public/index.html
-   ```
-
-2. **Serve a directory (defaults to `index.html` if present)**:
+1. **Serve a directory (defaults to `index.html` if present)**:
    ```bash
    live-server ./public
    ```
 
-3. **Serve the current directory**:
+2. **Serve the current directory**:
    ```bash
    live-server .
    ```
@@ -49,14 +44,32 @@ live-server <path-to-files>
    live-server
    ```
 
-4. **Customize the port (default: 3000)**:
+3. **Customize the port (default: 3000)**:
    ```bash
    live-server ./public --port 8080
    ```
 
-5. **View available commands and options**:
+4. **View available commands and options**:
    ```bash
    live-server --help
+   ```
+
+5. **Show the current version of Live Server**:
+   ```bash
+   live-server --version
+   ```
+   Or:
+   ```bash
+   live-server -v
+   ```
+
+6. **Enable strict mode (enforce exact matching of paths)**:
+   ```bash
+   live-server ./public --strict
+   ```
+   Or:
+   ```bash
+   live-server ./public -s
    ```
 
 ### Real-Time Functionality
@@ -80,13 +93,25 @@ project-root/
 │   │   └── banner.jpg
 ```
 
+### Available CLI Options
+
+| Option           | Description                                                      | Default               |
+|-------------------|------------------------------------------------------------------|-----------------------|
+| `paths`          | One or more directories or files to serve.                       | Current working directory |
+| `--port=<number>`| Specify the port for the server.                                 | `3000`                |
+| `-p <number>`    | Alias for `--port`.                                              | -                     |
+| `--help, -h`     | Show this help message.                                          | -                     |
+| `--version, -v`  | Show the current version.                                        | -                     |
+| `--strict, -s`   | Enforce exact matching between the requested path and filename.  | `false`               |
+
+
 ## 🤝 Contributing
 
 We welcome contributions to improve **Live Server**! If you find bugs, want to propose new features, or enhance the CLI experience, feel free to open an issue or submit a pull request.
 
 ## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [MIT License](https://github.com/stexcore/live-server/blob/main/LICENSE).
 
 ## ✨ Author
 

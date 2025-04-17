@@ -1,6 +1,6 @@
 {
   "name": "@stexcore/live-server",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-beta.1",
   "description": "Live Server A simple tool to quickly initialize a live server from an HTML file path, enabling real-time updates for efficient development workflows.",
   "bin": {
     "live-server":"./bin/index.js"

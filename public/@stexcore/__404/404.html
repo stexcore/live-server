@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Not found</title>
+    <link href="/@stexcore/__404/404.css" rel="stylesheet"/>
+    <script>
+        /**
+         * Go to back or reload current page
+         */
+        function goToBack() {
+            if(history.length) {
+                history.back();
+            }
+            else {
+                location.reload();
+            }
+        }
+
+        // On load page
+        document.addEventListener("DOMContentLoaded", () => {
+            if(!history.length) {
+                // Set text
+                document.getElementById("back-button").textContent = "Reload Page";
+            }
+        });
+        
+    </script>
+</head>
+
+<body>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="main">
+      <h1>404</h1>
+      <p>It looks like you're lost...<br/>That's a trouble?</p>
+      <button id="back-button" type="button" onclick="goToBack()">Go back</button>
+    </div>
+
+    <script src="/@stexcore/__stexcore-live-update.js"></script>
+</body>
+
+</html>
